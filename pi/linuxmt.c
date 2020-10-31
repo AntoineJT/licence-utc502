@@ -30,6 +30,8 @@ void* pi_mt_ep(void* start_)
     pthread_mutex_lock(&mutex);
     --alive_threads;
     pthread_mutex_unlock(&mutex);
+
+    free(start_);
 }
 
 double pi_mt_main(void)
@@ -38,7 +40,9 @@ double pi_mt_main(void)
 
     for (int i = 0; i < NUM_THREADS; ++i)
     {
-        pthread_create(&threads[i], NULL, pi_mt_ep, (void*) &i);
+        int* start = malloc(sizeof(int));
+        *start = i;
+        pthread_create(&threads[i], NULL, pi_mt_ep, (void*) start);
         
         pthread_mutex_lock(&mutex);
         ++alive_threads;
@@ -49,7 +53,6 @@ double pi_mt_main(void)
     
     return sum * width;
 }
-
 
 int main(int argc, char** argv)
 {
