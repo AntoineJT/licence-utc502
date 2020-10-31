@@ -4,13 +4,15 @@
 #include <unistd.h>
 
 // globals are bad, but this is a stupid sample program
+// set once, never changed
 int intervals;
 double width;
-volatile double sum = 0;
+// modified by threads intensively
+double sum = 0;
 
 // mutex + alive threads count
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-volatile int alive_threads = 0;
+int alive_threads = 0;
 
 #define NUM_THREADS 2
 
